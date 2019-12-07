@@ -1,13 +1,25 @@
 package config
 
-import "database/sql"
-import _ "github.com/go-sql-driver/mysql"
+import (
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+	"log"
+)
 
-func Connect() (*sql.DB, error) {
-	db, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/golang_blog")
+var DB *sql.DB
+
+func ConnectDB(dataSourceName string) {
+	var err error
+	DB, err = sql.Open("mysql", dataSourceName)
 	if err != nil {
-		return nil, err
+		log.Panic(err)
 	}
-	return db, nil
+
+	if err = DB.Ping(); err != nil {
+		log.Panic(err)
+	}
+
 }
+
+
 
